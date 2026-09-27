@@ -1,0 +1,138 @@
+/*
+ * popup.css — Corp.Vellum dark-glass style for the extension action popup.
+ * Visual only: markup IDs (#save, #status, #review, #review-rate, #review-later)
+ * and popup.js behavior are unchanged. Colors ported from the Corp.Vellum
+ * Design System (tokens). Self-contained (extension CSP: no external fonts).
+ */
+
+:root {
+  --cv-black:#0A0A0B; --cv-navy-deep:#0B1220;
+  --glass:rgba(255,255,255,0.05); --glass-strong:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.16); --hairline:rgba(255,255,255,0.06);
+  --text:#FAFAFA; --muted:#A1A1AA; --dim:#71717B;
+  --orange:#FE9A00; --amber:#FCBB00; --hot:#F05100;
+  --grad-cta:linear-gradient(100deg,#FCBB00 0%,#FE9A00 40%,#3B9EFF 100%);
+  --grad-orange:linear-gradient(135deg,#FE9A00 0%,#BB4D00 100%);
+  --grad-orange-hot:linear-gradient(135deg,#FCBB00 0%,#F05100 100%);
+  --grad-blue:linear-gradient(135deg,#3B9EFF 0%,#0F2A5C 100%);
+  --glow-orange-sm:0 0 24px -2px rgba(254,154,0,0.45);
+  --glow-orange-md:0 8px 40px -6px rgba(254,154,0,0.5);
+  /* Glass-frame tokens, ported verbatim from the site hero widget so the popup
+     matches the "Saved to PDF" card on corpvellum.com (rounded + glass + glow). */
+  --radius-card:22px;
+  --glow-orange-lg:0 12px 70px -8px rgba(254,154,0,0.55);
+  --shadow-float:0 32px 80px -24px rgba(0,0,0,0.7);
+  --sheen-top:inset 0 1px 0 rgba(255,255,255,0.12);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  /* Padding gives the card room to float and lets the glow bleed around its
+     rounded edges (the popup window itself is a fixed rectangle). */
+  padding: 16px;
+  font-family: var(--font);
+  color: var(--text);
+  /* Flat near-black backdrop with a soft warm glow near the top, so the orange
+     halo reads around the card edges. The rich cinematic gradient now lives on
+     the card itself (.wrap) — this stays quiet behind it. */
+  background-color: #060608;
+  background-image:
+    radial-gradient(135% 75% at 72% 0%, rgba(254,154,0,0.20) 0%, rgba(254,154,0,0.04) 30%, rgba(11,18,32,0.28) 58%, #060608 100%);
+}
+
+/* .wrap is now the glass card: rounded corners, light glass border, cinematic
+   fill, and the site widget's glow (orange halo + float shadow + top sheen). */
+.wrap {
+  width: 300px;
+  position: relative;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-strong);
+  background-color: #0A0A0B;
+  background-image:
+    radial-gradient(120% 90% at 70% 12%, rgba(254,154,0,0.22) 0%, rgba(254,154,0,0.05) 28%, rgba(15,42,92,0.55) 62%, #0A0A0B 100%);
+  box-shadow: var(--glow-orange-lg), var(--shadow-float), var(--sheen-top);
+  overflow: hidden;
+}
+
+/* header: brand wordmark + Live badge */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--hairline);
+}
+.brand { display: inline-flex; align-items: center; gap: 9px; }
+.brand-ic { width: 22px; height: 22px; display: block; }
+.brand-name { display: inline-flex; align-items: baseline; font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+.brand-name .dot {
+  display: inline-block; width: 0.3em; height: 0.3em; border-radius: 999px;
+  background: var(--grad-orange-hot); margin: 0 0.05em 0 calc(0.1em + 2px);
+}
+.live {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px;
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--amber); border: 1px solid rgba(254,154,0,0.4); background: rgba(254,154,0,0.08); border-radius: 999px;
+}
+.live-dot { width: 5px; height: 5px; border-radius: 999px; background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+.body { padding: 16px; }
+
+.title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+
+.hint {
+  font-size: 12px; line-height: 1.5; color: var(--muted);
+  background: var(--glass); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 14px;
+}
+.hint ul { margin: 6px 0 4px 16px; padding: 0; }
+.hint li { margin-bottom: 4px; }
+.hint b { color: var(--text); }
+
+/* Primary CTA = the standard Corp.Vellum orange button (.btn--warm on the site):
+   solid orange gradient, dark ink, orange glow. No blue in the main action. */
+#save {
+  width: 100%; padding: 11px 16px; border: none; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  background: var(--grad-orange); color: #1A0E00;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  box-shadow: var(--glow-orange-sm);
+  transition: transform .14s cubic-bezier(.22,1,.36,1), box-shadow .24s, filter .14s;
+}
+/* DS rule (.btn:hover): text goes white with a micro shadow for readability. */
+#save:hover { transform: translateY(-1px); box-shadow: var(--glow-orange-md); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.45); }
+#save:active { transform: scale(.985); }
+#save:disabled { filter: grayscale(.35) brightness(.8); cursor: default; transform: none; box-shadow: none; }
+
+/* Идёт сбор: кнопка остаётся ЯРКОЙ (не :disabled) и крутит спиннер. Повторный клик
+   блокируется в popup.js флагом busy + pointer-events. border-top-color = цвет текста
+   кнопки (#1A0E00, чернильная краска DS на оранжевом), чтобы спиннер читался. */
+.spinner {
+  display: none; width: 14px; height: 14px; flex: none;
+  border: 2px solid rgba(26,14,0,0.30); border-top-color: #1A0E00; border-radius: 50%;
+  animation: vellum-spin .7s linear infinite;
+}
+#save.is-busy { cursor: default; pointer-events: none; transform: none; }
+#save.is-busy .spinner { display: inline-block; }
+@keyframes vellum-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 1.6s; } }
+
+.status { min-height: 18px; margin-top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .03em; color: var(--muted); text-align: center; }
+.status--error { color: #ff6b5e; }
+
+/* review prompt (#25) */
+.review { margin-top: 14px; padding: 12px 13px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; }
+.review-text { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.45; }
+.review-actions { display: flex; gap: 8px; }
+.review-rate {
+  flex: 1; padding: 7px 10px; border: none; border-radius: 8px;
+  background: var(--grad-blue); color: #EAF3FF; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.review-later {
+  flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: transparent; color: var(--muted); font-size: 12px; cursor: pointer;
+}
+.review-later:hover { color: var(--text); border-color: var(--border-strong); }
+
+.foot { margin-top: 12px; text-align: center; font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .06em; }

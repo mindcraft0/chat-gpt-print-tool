@@ -1,0 +1,270 @@
+/* Вшитый CJK-шрифт: гарантирует иероглифы/кану/хангыль даже если в системе
+   пользователя нет CJK-шрифта. Стоит в КОНЦЕ шрифтовых стеков, поэтому латиница,
+   кириллица и европейские письменности берутся из системных шрифтов как раньше,
+   а на CJK-глифах происходит откат сюда. Лицензия: SIL OFL 1.1 (см. fonts/LICENSE). */
+@font-face {
+  font-family: 'Noto Sans CJK bundled';
+  src: url('fonts/NotoSansCJK-Regular.subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * print.css - оформление документа-печати и правила поведения при печати браузера.
+ * Почему отдельным файлом: страница печати не связана с оформлением ChatGPT,
+ * это наш собственный аккуратный шаблон отчёта.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    'Noto Sans CJK bundled', "PingFang SC", "Hiragino Sans", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.cgpt-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* Шапка документа: заголовок разговора, дата, наша подпись. */
+.cgpt-header {
+  border-bottom: 2px solid #e2e2e2;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+}
+
+.cgpt-header h1 {
+  font-size: 22px;
+  margin: 0 0 6px;
+  word-break: break-word;
+}
+
+.cgpt-header .cgpt-meta {
+  font-size: 12px;
+  color: #666666;
+}
+
+.cgpt-header .cgpt-brand {
+  font-size: 12px;
+  color: #999999;
+  margin-top: 4px;
+}
+
+/* Длинное сообщение может быть выше листа, поэтому ему разрешён перенос между
+   листами, иначе длинный ответ обрезался бы. Неразрывными держим только атомарные
+   блоки ниже (код, таблицы, картинки, формулы). */
+.cgpt-message {
+  margin-bottom: 20px;
+}
+
+.cgpt-role {
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+  padding-top: 4px;
+  /* Подпись роли не должна оставаться одна в конце листа в отрыве от текста. */
+  break-after: avoid;
+}
+
+.cgpt-role--user {
+  color: #0b5fff;
+}
+
+.cgpt-role--assistant {
+  color: #12813a;
+}
+
+.cgpt-body {
+  word-wrap: break-word;
+}
+
+.cgpt-body p {
+  margin: 0 0 10px;
+}
+
+.cgpt-body ul, .cgpt-body ol {
+  margin: 0 0 10px 20px;
+  padding: 0;
+}
+
+.cgpt-body blockquote {
+  border-left: 3px solid #ccc;
+  margin: 0 0 10px;
+  padding-left: 12px;
+  color: #444;
+}
+
+/* Код: моноширинный, с фоном, длинные строки переносятся, а не обрезаются. */
+.cgpt-body pre {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: "SF Mono", Menlo, Consolas, 'Noto Sans CJK bundled', "PingFang SC", "Hiragino Sans", "Microsoft YaHei", monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  break-inside: avoid;
+  margin: 0 0 10px;
+}
+
+.cgpt-body code {
+  font-family: "SF Mono", Menlo, Consolas, 'Noto Sans CJK bundled', "PingFang SC", "Hiragino Sans", "Microsoft YaHei", monospace;
+  background: #f0f0f0;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Highlighted code: the block's background AND token colours are captured inline
+   from ChatGPT (so contrast matches whichever theme the user has — light or dark).
+   We only need to force the captured background to actually print. */
+.cgpt-body pre.cgpt-code {
+  border-color: transparent;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.cgpt-body pre.cgpt-code code { background: transparent; color: inherit; }
+
+.cgpt-body pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Таблицы: рамки, полная ширина, длинный текст переносится, не разрываем между листами. */
+.cgpt-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 12px;
+  break-inside: avoid;
+  table-layout: fixed;
+}
+
+.cgpt-body th, .cgpt-body td {
+  border: 1px solid #d0d0d0;
+  padding: 6px 8px;
+  text-align: left;
+  word-break: break-word;
+  vertical-align: top;
+}
+
+.cgpt-body img {
+  max-width: 100%;
+  height: auto;
+  break-inside: avoid;
+  margin: 0 0 10px;
+}
+
+/* ЗНАЧКИ ИСТОЧНИКОВ В ССЫЛКАХ (жалоба пользователя 14.09.2026).
+   ChatGPT ставит в конце абзаца ссылку на источник со значком сайта. На странице чата он
+   размером с букву, потому что размер ему задают классами вёрстки ChatGPT. В наш документ
+   классы не переезжают, и правило .cgpt-body img выше рисует его в натуральную величину -
+   у index.hr это 128 пикселей, красный квадрат на треть абзаца, да ещё с нижним отступом
+   как у блочной картинки, отчего абзац разрывается.
+   Ставим значок обратно в строку: высота с букву, ширина по пропорции. */
+.cgpt-body img.cgpt-icon {
+  display: inline;
+  height: 1em;
+  width: auto;
+  max-width: 1.5em;
+  margin: 0 0.2em;
+  vertical-align: -0.12em;
+  break-inside: auto;
+}
+
+/* Строчная формула остаётся внутри строки текста (по умолчанию span - строчный). */
+.cgpt-math math {
+  font-size: 1.05em;
+}
+
+/* Выключная формула: на отдельной строке, по центру, длинная не ломает лист. */
+.cgpt-math-display {
+  display: block;
+  /* Никакой прокрутки: в статичном PDF полоса нерабочая и обрезает формулу.
+     Широкую выключную формулу масштабирует под ширину листа fitWideMath() в print.js. */
+  overflow: hidden;
+  text-align: center;
+  break-inside: avoid;
+  margin: 12px 0;
+}
+
+.cgpt-tex-wrap {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+  background: #f7f7f7;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.cgpt-loading, .cgpt-empty {
+  text-align: center;
+  color: #666;
+  padding: 60px 20px;
+  font-size: 15px;
+}
+
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  body {
+    font-size: 13px;
+  }
+
+  .cgpt-container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cgpt-body pre, .cgpt-body table, .cgpt-body img, .cgpt-math-display {
+    break-inside: avoid;
+  }
+
+  /* Картинка не должна быть выше полезной площади листа. На A4 при полях 15 мм это
+     267 мм; берём 240 мм с запасом на подпись роли над картинкой. Без этого высокая
+     картинка (длинный скриншот) не влезает в лист и обрезается: break-inside: avoid
+     не даёт её разорвать, а разорвать её и нельзя - это не текст.
+     object-fit: contain сохраняет пропорции при упоре в потолок высоты. */
+  .cgpt-body img {
+    max-height: 240mm;
+    object-fit: contain;
+  }
+}
+
+/* Ненавязчивая фирменная подпись в конце документа. */
+.cgpt-footer {
+  margin-top: 30px;
+  padding-top: 12px;
+  border-top: 1px solid #ececec;
+  text-align: center;
+  font-size: 11px;
+  color: #a3a3a3;
+  letter-spacing: 0.02em;
+  break-inside: avoid;
+}
+.cgpt-footer b { color: #6f6f6f; font-weight: 600; }
+@media print {
+  .cgpt-footer { color: #a3a3a3; }
+}

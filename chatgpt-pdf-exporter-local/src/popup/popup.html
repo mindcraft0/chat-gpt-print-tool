@@ -1,0 +1,56 @@
+<!--
+  popup.html - окно расширения (открывается по значку). Показывает подсказку, что
+  выбрать в окне печати, и кнопку запуска. Логика в popup.js, оформление в popup.css.
+  Видимый текст на английском: продукт для рынка США и ЕС.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <span class="brand">
+        <img class="brand-ic" src="../../icons/icon32.png" alt="" />
+        <span class="brand-name">CHATGPT<span class="dot"></span>Vellum</span>
+      </span>
+      <span class="live"><span class="live-dot"></span>Live</span>
+    </div>
+
+    <div class="body">
+      <div class="title">Save conversation to PDF</div>
+
+      <div class="hint">
+        After you click, the browser print window opens. There:
+        <ul>
+          <li>in the “Destination” field choose <b>“Save as PDF”</b>;</li>
+          <li>open “More settings” and turn off <b>“Headers and footers”</b> so the file has no date or address.</li>
+        </ul>
+        The browser will remember this choice.
+      </div>
+
+      <button id="save" type="button">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Save to PDF</span>
+      </button>
+      <div id="status" class="status"></div>
+
+      <div id="review" class="review" hidden>
+        <div class="review-text">Enjoying CHATGPT.Vellum? A quick review really helps others find it.</div>
+        <div class="review-actions">
+          <button id="review-rate" type="button" class="review-rate">Rate ★</button>
+          <button id="review-later" type="button" class="review-later">Not now</button>
+        </div>
+      </div>
+
+      <div class="foot">Private · Runs in your browser</div>
+    </div>
+  </div>
+
+  <script src="../events.js"></script>
+  <script src="../review.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

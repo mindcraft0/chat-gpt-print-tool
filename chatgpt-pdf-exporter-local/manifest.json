@@ -1,0 +1,41 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "icons/icon128.png",
+         "16": "icons/icon16.png",
+         "32": "icons/icon32.png",
+         "48": "icons/icon48.png"
+      },
+      "default_popup": "src/popup/popup.html",
+      "default_title": "Save to PDF"
+   },
+   "background": {
+      "service_worker": "src/background.js"
+   },
+   "content_scripts": [ {
+      "js": [ "src/events.js", "src/lib.js", "src/dom-scan.js", "src/content.js" ],
+      "matches": [ "https://chatgpt.com/*", "https://chat.openai.com/*" ],
+      "run_at": "document_idle"
+   } ],
+   "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'"
+   },
+   "description": "ChatGPT to PDF in one click: full long chats, images, code, tables kept. Free, no account, built in your browser.",
+   "host_permissions": [ "https://www.google-analytics.com/*", "https://images.openai.com/*", "https://*.oaiusercontent.com/*" ],
+   "icons": {
+      "128": "icons/icon128.png",
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwhT4lxSc45zEsOm2mR1uoLsblzWYucKQ2xkzN7UOS5HWQwFv92GCuBfTyMT4eqXy1/q1B2JI+mIz1eusuPkKoLCnDEC6mlBCABl4NqWilw6xsYhfoh2Osjod1HbXVKnvGN8o38bPy1bB9oaw5+hztxvio0JlgT2En8L5ivxegRZvQGl25Bm0ZRQBdDvjejCpxQGu5G8NMPgJU5IcczrUgHyb10FTB+TtMXDlBG3nCtMukHoaCo6FeShnFE/2/+BJHLlu30aBCHY2gbsq3jBPpkvq5mpP3CcJa3PxTVpKzphieRvVwKFFii/AD+IB0Ve0ptSai2Es/vIJsd+iMGGJmQIDAQAB",
+   "manifest_version": 3,
+   "name": "PDF Exporter for ChatGPT - Vellum",
+   "permissions": [ "storage", "activeTab", "unlimitedStorage", "scripting", "declarativeContent" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.9.4",
+   "web_accessible_resources": [ {
+      "matches": [ "https://chatgpt.com/*", "https://chat.openai.com/*" ],
+      "resources": [ "src/print/print.html", "src/print/print.css", "src/print/print.js" ]
+   } ]
+}

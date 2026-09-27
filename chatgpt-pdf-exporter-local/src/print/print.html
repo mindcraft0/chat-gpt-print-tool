@@ -1,0 +1,22 @@
+<!--
+  print.html - каркас страницы-документа, которую печатает браузер.
+  Почему пустой каркас: всё содержимое строит print.js из сохранённых данных,
+  чтобы не тащить сюда логику и не зависеть от разметки ChatGPT.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ChatGPT conversation</title>
+  <link rel="stylesheet" href="print.css" />
+</head>
+<body>
+  <div class="cgpt-container">
+    <div id="cgpt-header" class="cgpt-header"></div>
+    <div id="cgpt-content"></div>
+    <div class="cgpt-footer">Saved with <b>CHATGPT.Vellum</b> &middot; corpvellum.com</div>
+  </div>
+  <script src="../events.js"></script>
+  <script src="print.js"></script>
+</body>
+</html>

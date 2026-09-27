@@ -1,0 +1,57 @@
+ChatGPT PDF Exporter debugging notes
+====================================
+
+Reset state
+-----------
+- Local unpacked copy: C:\Users\Robert\Desktop\OMS semester 1\chatgpt-pdf-exporter-local
+- Original installed extension ID: jehoafilhpddalhmhgpcflmfcknkmhol
+- Installed source baseline: Chrome Default profile, version 0.9.4_0
+- On 2026-09-27, manifest.json, src\dom-scan.js, and src\content.js in the
+  local copy were restored from that installed source and verified byte-for-byte
+  with SHA-256 hashes.
+
+Original failure
+----------------
+- The extension popup reported: "Could not find any messages on this page."
+- Its original scanner searches these old page markers:
+  - [data-message-author-role]
+  - [data-testid^="conversation-turn"]
+  - main article
+- On the observed chatgpt.com conversation, all of those selectors returned 0.
+
+Observed current ChatGPT DOM
+----------------------------
+- A visible assistant reply contained a body element with a generated class whose
+  stable prefix was MarkdownRoot- (example: MarkdownRoot-rZKhxa).
+- The visible reply's ancestor chain included a Tailwind class containing the
+  literal text [data-virtualized-turn-content].
+- ChatGPT is virtualized: only part of a long conversation is mounted at once.
+- Any correct full-conversation exporter needs to identify the real scroll
+  container and collect stable turn containers while scrolling.
+
+What was tried, then reverted
+-----------------------------
+- Broad MarkdownRoot-* collection found many nested/repeated blocks and produced
+  an implausible count (189 messages).
+- A no-scroll fallback stopped the scrolling loop but could only export currently
+  mounted content, so it was not a complete solution.
+- A guessed [data-virtualized-turn-content] selector was prepared but was not
+  confirmed by a complete successful export before this reset.
+
+Important next diagnostics
+--------------------------
+- In the ChatGPT page DevTools Console, measure these selectors before changing code:
+  document.querySelectorAll('[data-virtualized-turn-content]').length
+  document.querySelectorAll('[class^="MarkdownRoot-"], [class*=" MarkdownRoot-"]').length
+- Inspect the parent chain of one [data-virtualized-turn-content] element to find
+  the element whose overflowY is auto/scroll and whose scrollHeight is larger than
+  clientHeight.
+- Determine how a turn identifies user versus assistant; MarkdownRoot appears to
+  identify assistant content only, so it cannot alone export both sides correctly.
+- Do not infer that the exporter takes screenshots. The original source copies
+  actual DOM images into the print document; its image handling is in src\content.js.
+
+Unrelated console noise seen during testing
+-------------------------------------------
+- Repeated CORS/frame errors from a Codex iframe and blocked analytics requests
+  appeared in DevTools. They were not proven to be caused by this extension.
